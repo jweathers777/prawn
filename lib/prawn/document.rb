@@ -70,14 +70,10 @@ module Prawn
     # <tt>:skip_page_creation</tt>:: Creates a document without starting the first page [false]
     # <tt>:compress</tt>:: Compresses content streams before rendering them [false]
     # <tt>:background</tt>:: An image path to be used as background on all pages [nil]
-    # <tt>:info</tt>:: Generic hash allowing for custom metadata properties [nil]
-    # <tt>:Title</tt>:: Document metadata title property [nil]
-    # <tt>:Author</tt>:: Document metadata author property [nil]
-    # <tt>:Subject</tt>:: Document metadata subject property [nil]
-    # <tt>:Keywords</tt>:: Document metadata keywords property [nil]
-    # <tt>:Creator</tt>:: Document metadata creator property [Prawn]
-    # <tt>:Producer</tt>:: Document metadata producer property [Prawn]
-    # <tt>:CreationDate</tt>:: Document metadata creation date property [nil]
+    # <tt>:info</tt>:: 
+    #     Generic hash allowing for custom metadata properties including standard properties
+    #     such as :Title, :Author, :Subject, :Keywords, :Creator, :Producer, :CreationDate.
+    #     Defaults to { :Creator => 'Prawn', :Producer => 'Prawn' }.
     # 
     # Usage:
     #                             
@@ -93,14 +89,9 @@ module Prawn
     def initialize(options={},&block)   
        Prawn.verify_options [:page_size, :page_layout, :left_margin, 
          :right_margin, :top_margin, :bottom_margin, :skip_page_creation, 
-         :compress, :skip_encoding, :text_options, :background, 
-         :info, :Title, :Author, :Subject, :Keywords, :Creator, :Producer, :CreationDate ], options
+         :compress, :skip_encoding, :text_options, :background, :info ], options
        
        options[:info] ||= { :Creator => "Prawn", :Producer => "Prawn" }
-       %w{Title Author Subject Keywords Creator Producer CreationDate}.each do |property|
-          symbol = property.to_sym
-          options[:info][symbol] = options[symbol] || options[:info][symbol]
-       end
        options[:info].keys.each do |key|
          if options[:info][key].class == String
            options[:info][key] = Prawn::LiteralString.new(options[:info][key])
